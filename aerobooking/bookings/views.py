@@ -1,5 +1,7 @@
 from django.shortcuts import render, reverse
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.core.exceptions import ValidationError
 
 from .models import Booking, Aircraft
 from .forms import BookingUserForm, BookingAdminForm
@@ -7,16 +9,54 @@ from members.models import Member
 
 # Create your views here.
 
+
+class HttpResponseSeeOther(HttpResponseRedirect):
+    status_code = 303
+
+
 def home(request):
     context = {
         'user': request.user,
     }
     return render(request, 'home.html', context)
 
+def bookings(request):
+    if request.method == 'POST':
+        return bookings_edit(request)
+    return bookings_table(request)
+
+@login_required(redirect_field_name='')
+def bookings_table(request):
+    context = {
+      'user': request.user,
+    }
+    return render(request, 'bookings-table.html', context)
+
 @login_required(redirect_field_name='')
 def bookings_list(request):
     data = []
     requested_data = []
+    if request.user.is_staff:
+        bookings = Booking.objects.all()
+    else:
+        bookings = Booking.objects.filter(member=request.user)
+    for b in bookings.order_by('-date', 'start_time', 'aircraft'):
+        start_time = b.start_time // 100 * 60 + b.start_time % 100
+        finish_time = start_time + b.duration
+        d = {
+            'date': b.date,
+            'aircraft': b.aircraft.callsign,
+            'start_time': f"{start_time // 60:02d}:{start_time % 60:02d}",
+            'finish_time': f"{finish_time // 60:02d}:{finish_time % 60:02d}",
+            'type': b.type,
+            'remarks': b.remarks,
+            'member': b.member.username,
+            'authorised': b.authorised,
+            'link': reverse('bookings_edit', args=[b.slug]),
+        }
+        data.append(d)
+        if not b.authorised:
+            requested_data.append(d)
     context = {
         'bookings': data,
         'requested_bookings': requested_data,
@@ -56,11 +96,11 @@ def bookings_edit(request, slug=None):
     if request.method == 'POST':
         if request.POST.get('_method', "").lower() == "delete":
             booking.delete()
-            return HttpResponseSeeOther(get_bookingview_url(date=booking.date))#, context)
+            return HttpResponseSeeOther(get_bookingview_url(date=booking.date))
         else:
             form = update_booking(booking, request)
             if not form:
-                return HttpResponseSeeOther(get_bookingview_url(date=booking.date))#, context)
+                return HttpResponseSeeOther(get_bookingview_url(date=booking.date))
     else:
         start_time = booking.start_time
         start_time = start_time // 100 * 60 + start_time % 100
@@ -73,7 +113,7 @@ def bookings_edit(request, slug=None):
     context = {
         'user': request.user,
         'form': form,
-        'action': reverse('bookings_edit', args=[slug]) if slug else reverse('main'),
+        'action': reverse('bookings_edit', args=[slug]) if slug else reverse('bookings'),
         'submit_text': "Update Booking" if slug else "Create Booking",
         'cancel_text': "Cancel Booking" if slug else "",
     }
