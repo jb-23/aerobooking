@@ -1,0 +1,45 @@
+[
+{
+  "model": "members.member",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$180000$kdqjMoSZ3Drd$4gXx0g1P7Z3Vhf/tUxqz2nhUiRqHV1dXLLLFAmDhZC8=",
+    "username": "Colonel",
+    "is_staff": true
+  }
+},
+{
+  "model": "members.member",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$180000$bu2ljx6EheLF$QA3hX9jjG6W5rdtw7ylEuWdN+PGmQ+tV8bWg1tOwD5g=",
+    "username": "James",
+    "is_staff": false
+  }
+},
+{
+  "model": "members.member",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$180000$6gB1AosE1kOT$Ol0VzidZdtiydXvpzD8JulmIrZwyMiIz/7SaNjFY3x4=",
+    "username": "Algernon",
+    "is_staff": false
+  }
+},
+{
+  "model": "bookings.aircraft",
+  "pk": 1,
+  "fields": {
+    "_callsign": "G-SPAM",
+    "_slug": "am"
+  }
+},
+{
+  "model": "bookings.aircraft",
+  "pk": 2,
+  "fields": {
+    "_callsign": "G-EGGS",
+    "_slug": "gs"
+  }
+}
+]

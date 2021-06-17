@@ -7,6 +7,7 @@
     {{ block.super }}
   {% else %}
     <form method=post action={% url 'login' %}>
+    {% csrf_token %}
     <label for=username>Username:</label>
     <input type=text name=username id=username>
     <label for=password>Password:</label>
