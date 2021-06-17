@@ -9,7 +9,7 @@
   <ul>
   <li><a href={% url 'home' %}>Home</a>
 {% if user.is_authenticated %}
-  <li><a href={% url 'main' %}>Bookings</a>
+  <li><a href={% url 'bookings' %}>Bookings</a>
     <ul>
     <li><a href={% url 'bookings_list' %}>All Bookings</a>
     </ul>
