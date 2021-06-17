@@ -19,6 +19,7 @@ class BookingUserForm(ModelForm):
         fields = ['date', 'aircraft', 'start_time', 'finish_time', 'type', 'remarks']
         widgets = {
             'start_time': forms.Select(choices=time_choices_generator()),
+            'remarks': forms.Textarea(),
         }
 
 
@@ -30,4 +31,5 @@ class BookingAdminForm(ModelForm):
         fields = ['date', 'aircraft', 'member', 'start_time', 'finish_time', 'type', 'authorised', 'remarks']
         widgets = {
             'start_time': forms.Select(choices=time_choices_generator()),
+            'remarks': forms.Textarea(),
         }
