@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block nav %}
+  {% if user.is_authenticated %}
+    {{ block.super }}
+  {% else %}
+    <form method=post action={% url 'login' %}>
+    <label for=username>Username:</label>
+    <input type=text name=username id=username>
+    <label for=password>Password:</label>
+    <input type=password name=password id=password>
+    <input type=submit value=Login>
+    </form>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<main>
+
+<h1>Aircraft Booking System</h1>
+
+</main>
+{% endblock %}
