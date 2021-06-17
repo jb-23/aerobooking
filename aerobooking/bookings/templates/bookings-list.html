@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Bookings List{% endblock %}
+
+{% block content %}
+<main>
+
+<h1>Bookings List</h1>
+
+<!--a href={ % url 'bookings_create' % }>Make New Booking</a-->
+
+{% if requested_bookings %}
+
+<h2>Requested Bookings</h2>
+
+<ul>
+{% for b in requested_bookings %}
+<li><a href={{ b.link }}>{{ b.date }} {{ b.start_time }}-{{ b.finish_time }} {{ b.aircraft }} {% if user.is_staff %}{{ b.member }} {% endif %}{% if b.remarks %}"{{ b.remarks }}"{% endif %}</a>
+{% endfor %}
+</ul>
+
+{% endif %}
+
+<h2>All Bookings</h2>
+
+<table>
+<thead><tr><td>Date<td>From<td>To<td>Aircraft{% if user.is_staff %}<td>Member{% endif %}<td>Remarks
+<tbody>
+{% for b in bookings %}
+<tr><td><a href={{ b.link }}>{{ b.date }}</a>
+  <td><a href={{ b.link }}>{{ b.start_time }}</a> <td><a href={{ b.link }}>{{ b.finish_time }}</a>
+  <td><a href={{ b.link }}>{{ b.aircraft }}</a>
+{% if user.is_staff %}<td><a href={{ b.link }}>{{ b.member }}</a>{% endif %}
+  <td>{% if not b.authorised %}<a href={{ b.link }}>(requested)</a> {% endif %}{{ b.remarks }}
+{% endfor %}
+</table>
+
+</main>
+
+{% endblock %}
