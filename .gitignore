@@ -1,0 +1,4 @@
+/commit.txt
+__pycache__/
+db.sqlite3
+geckodriver.log
